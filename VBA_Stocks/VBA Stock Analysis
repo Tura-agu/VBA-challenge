@@ -1,0 +1,75 @@
+
+Sub Stock_Analysis()
+
+Dim ws As Worksheet
+
+   For Each ws In Worksheets
+       
+        ws.Range("I1").Value = "Ticker"
+        ws.Range("J1").Value = "Yearly Change"
+        ws.Range("K1").Value = "Percent Change"
+        ws.Range("L1").Value = "Total Stock Volume"
+        
+        
+        Dim ticker As String
+        ticker = ""
+        Dim total_stock As Double
+        total_stock = 0
+        Dim row_count As Long
+        row_count = 1
+        Dim yr_open As Double
+        yr_open = 0
+        Dim yr_close As Double
+        yr_close = 0
+        Dim yr_change As Double
+        yr_change = 0
+        Dim per_change As Double
+        per_change = 0
+        Dim last_row As Long
+        
+    
+    last_row = ws.Cells(Rows.Count, 1).End(xlUp).row
+    
+    
+        For row = 2 To last_row:
+            If ws.Cells(row, 1).Value <> ticker Then
+                row_count = row_count + 1
+                ticker = ws.Cells(row, 1).Value
+                yr_open = ws.Cells(row, 3).Value
+                ws.Cells(row_count, 9).Value = ticker
+                total_stock = ws.Cells(row, 7).Value
+                ws.Cells(row_count, 12) = total_stock
+              Else
+                total_stock = total_stock + ws.Cells(row, 7).Value
+                ws.Cells(row_count, 12).Value = total_stock
+            End If
+            If ws.Cells((row + 1), 1).Value <> ticker Then
+                yr_close = ws.Cells(row, 6).Value
+                yr_change = yr_close - yr_open
+                ws.Cells(row_count, 10).Value = yr_change
+                      ws.Cells(row_count, 11).NumberFormat = "0.00%"
+                If yr_open = 0 Then
+                    per_change = year_change
+                Else
+                    per_change = yr_change / yr_open
+                End If
+                ws.Cells(row_count, 11).Value = per_change
+                      ws.Cells(row_count, 11).NumberFormat = "0.00%"
+            
+                If yr_change >= 0 Then
+                    ws.Cells(row_count, 10).Interior.ColorIndex = 4
+                Else
+                    ws.Cells(row_count, 10).Interior.ColorIndex = 3
+                
+                End If
+            
+            End If
+            
+        Next row
+        
+    Next ws
+    
+End Sub
+
+
+
